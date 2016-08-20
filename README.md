@@ -1,3 +1,13 @@
+To run
+======
+
+Install JRE 1.8 and sbt (Scala Build Tool)
+
+$ sbt run
+
+HTTP API
+========
+
 Add a Product
 =============
 
