@@ -58,7 +58,7 @@ case class Product(name: String, price: Double, description: String)
 
 case class ProductAdded(product: Product)
 
-class ClientCurrentProducts extends PersistentView {
+class ClientCurrentProducts extends PersistentView with ActorLogging {
   
   override def persistenceId = "client"
   
@@ -67,9 +67,11 @@ class ClientCurrentProducts extends PersistentView {
   def products(existing: List[Product]): Receive = {
     
     case ProductAdded(product) =>
+      log.info("added a product")
       context.become(products( product :: existing ))
     
     case 'GetProducts =>
+      log.info("somebody wants the list of all products")
       sender() ! existing
   }
   
@@ -84,6 +86,7 @@ class Client extends PersistentActor with ActorLogging {
   override def receiveCommand = {
     
     case AddProduct(product) =>
+      log.info("received an add product command")
       persist(ProductAdded(product)) {
         event =>
         // do nothing here since there's no state
